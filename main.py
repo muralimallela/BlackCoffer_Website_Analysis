@@ -41,7 +41,6 @@ async def fetch_and_save_article(url_id, url):
                                                                                                class_='td-post-content ' 'tagdiv-type') else soup.find_all(
                 'div',
                 class_='td_block_wrap tdb_single_content tdi_130 td-pb-border-top td_block_template_1 td-post-content ' 'tagdiv-type')
-
             with open(f'ExtractedArticles/{url_id}.txt', 'w', encoding='utf-8') as file:
                 for entry_title in entry_titles:
                     file.write(entry_title.text)
@@ -49,7 +48,8 @@ async def fetch_and_save_article(url_id, url):
                     text_content = div_content.get_text(separator='')
                     file.write(text_content)
 
-            print(f"{url_id} website completed")
+            # print(f"{url_id} website completed")
+            print(".",end="",flush=True)
 
 
 async def extract_articles():
@@ -158,7 +158,8 @@ def analysis():
         pronouns_found = re.findall(pronoun_pattern, cleaned_text.lower())
         personal_pronouns = len(pronouns_found)
         data.append([url_id, url, positive_score, negative_score, polarity_score, subjective_score, average_sentence_length, percentage_of_complex_words, fog_index, average_number_of_words_per_sentence, complex_word_count, word_count, syllable_per_word, personal_pronouns])
-        print(f"{url_id}'s analysis is completed")
+        # print(f"{url_id}'s analysis is completed")
+        print(".",end="",flush=True)
     df = pd.DataFrame(data[1:], columns=data[0])
     df.to_excel('output.xlsx', index=False)
 
@@ -168,11 +169,15 @@ if __name__ == "__main__":
 
     start_time = time.time()
     try:
+        root_dir = os.getcwd()
+        folder_path = os.path.join(root_dir, "ExtractedArticles")
+        if not os.path.exists(folder_path):
+            os.mkdir(folder_path) 
         print("Extracting data from websites")
         asyncio.run(extract_articles())
-        print("Extract data from websites is completed\nAnalysing the data")
+        print("\nExtract data from websites is completed\nAnalysing the data")
         analysis()
-        print("\nAnalysis is completed please check out the `output.xlsx` file in root directory\n")
+        print(f"\nAnalysis is completed please check out the `{folder_path}/output.xlsx` file\n")
     except Exception as e:
         print("\nsomething went wrong!\n",e)
     end_time = time.time()
