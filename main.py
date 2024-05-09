@@ -163,7 +163,6 @@ def analysis():
         print(".",end="",flush=True)
     df = pd.DataFrame(data[1:], columns=data[0])
     df.to_excel(f'{os.getcwd()}/output.xlsx', index=False)
-    print(os.getcwd())
 
 
 if __name__ == "__main__":
