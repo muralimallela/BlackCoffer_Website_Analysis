@@ -53,7 +53,8 @@ async def fetch_and_save_article(url_id, url):
 
 
 async def extract_articles():
-    df = pd.read_excel('Input.xlsx')
+    
+    df = pd.read_excel(f'{os.getcwd()}/Input.xlsx')
 
     tasks = []
     for index, row in df.iterrows():
@@ -65,7 +66,7 @@ async def extract_articles():
 
 
 def stopwords_list():
-    stopwords_folder_path = "StopWords"
+    stopwords_folder_path = f"{os.getcwd()}/StopWords"
     stop_words = []
     for filename in os.listdir(stopwords_folder_path):
         if filename.endswith(".txt"):
@@ -80,13 +81,13 @@ def remove_stopwords(tokenized_words, stop_words):
 
 
 def positive_words_list():
-    words = open("MasterDictionary/positive-words.txt", encoding="utf-8").read()
+    words = open(f"{os.getcwd()}/MasterDictionary/positive-words.txt", encoding="utf-8").read()
     positive_words = word_tokenize(words)
     return positive_words
 
 
 def negative_words_list():
-    words = open("MasterDictionary/negative-words.txt", encoding="ISO-8859-1").read()
+    words = open(f"{os.getcwd()}/MasterDictionary/negative-words.txt", encoding="ISO-8859-1").read()
     negative_words = word_tokenize(words)
     return negative_words
 
@@ -104,13 +105,13 @@ def is_complex(word):
 
 
 def analysis():
-    df = pd.read_excel('Input.xlsx')
+    df = pd.read_excel(f'{os.getcwd()}/Input.xlsx')
     for index, row in df.iterrows():
         url_id = row['URL_ID']
         url = row['URL']
         words_score = {}
 
-        plain_text = open(f"./ExtractedArticles/{url_id}.txt", 'r').read()
+        plain_text = open(f"{os.getcwd()}/ExtractedArticles/{url_id}.txt", 'r').read()
 
         if plain_text == '':
             continue
@@ -161,7 +162,8 @@ def analysis():
         # print(f"{url_id}'s analysis is completed")
         print(".",end="",flush=True)
     df = pd.DataFrame(data[1:], columns=data[0])
-    df.to_excel('output.xlsx', index=False)
+    df.to_excel(f'{os.getcwd()}/output.xlsx', index=False)
+    print(os.getcwd())
 
 
 if __name__ == "__main__":
@@ -177,7 +179,7 @@ if __name__ == "__main__":
         asyncio.run(extract_articles())
         print("\nExtract data from websites is completed\nAnalysing the data")
         analysis()
-        print(f"\nAnalysis is completed please check out the `{folder_path}/output.xlsx` file\n")
+        print(f"\nAnalysis is completed please check out the `{root_dir}/output.xlsx` file\n")
     except Exception as e:
         print("\nsomething went wrong!\n",e)
     end_time = time.time()
